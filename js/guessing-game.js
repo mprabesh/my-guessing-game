@@ -21,6 +21,10 @@ Game.prototype.isLower = function () {
 };
 Game.prototype.playersGuessSubmission = function (myGuessNum) {
   if (myGuessNum < 1 || myGuessNum > 100 || isNaN(myGuessNum)) {
+    document.querySelector("#title").innerHTML =
+      "Please Enter only valid Number";
+    document.querySelector("#players-input").value = "";
+
     throw `That is an invalid guess.`;
   } else {
     this.playersGuess = myGuessNum;
