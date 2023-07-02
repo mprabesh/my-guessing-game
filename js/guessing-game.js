@@ -1,4 +1,4 @@
-/* 
+/*
 Write your guess-game code here! Don't forget to look at the test specs as a guide. You can run the specs
 by running "testem".
 In this file, you will also include the event listeners that are needed to interact with your HTML file when
@@ -9,7 +9,7 @@ class Game {
   constructor() {
     this.playersGuess = null;
     this.pastGuesses = [];
-    this.winningNumber = 0;
+    this.winningNumber = generateWinningNumber();
   }
 }
 
@@ -31,13 +31,24 @@ Game.prototype.checkGuess = function () {
   let gameResult = "";
   if (this.playersGuess === this.winningNumber) {
     gameResult = "You Win!";
+    document.querySelector("#subtitle").innerHTML = "Yay! reset to play again";
   } else if (this.pastGuesses.includes(this.playersGuess)) {
+    // alert(this.winningNumber);
     gameResult = "You have already guessed that number.";
+    document.querySelector("#subtitle").innerHTML =
+      "Guess a number between 1-100";
   } else {
     this.pastGuesses.push(this.playersGuess);
     if (this.pastGuesses.length === 5) {
       gameResult = "You Lose.";
+      document.querySelector("#subtitle").innerHTML = "Please! reset the game";
     } else {
+      document.getElementsByClassName("guess")[
+        `${this.pastGuesses.length}` - 1
+      ].innerHTML = this.playersGuess;
+      let guessLevel = this.isLower() ? "Guess Higher" : "Guess Lower";
+      document.querySelector("#subtitle").innerHTML = guessLevel;
+      document.querySelector("#players-input").value = "";
       if (this.difference() < 10) {
         gameResult = "You're burning up!";
       } else if (this.difference() < 25) {
@@ -49,6 +60,8 @@ Game.prototype.checkGuess = function () {
       }
     }
   }
+
+  document.querySelector("#title").innerHTML = gameResult;
   return gameResult;
 };
 
@@ -79,3 +92,28 @@ function shuffle(myArr) {
   }
   return myArr;
 }
+
+function playGame() {
+  //create a new Instance
+  let myGame = new Game();
+  let submitButton = document.getElementById("submit");
+  submitButton.addEventListener("click", () => {
+    let inputNumber = document.getElementById("players-input");
+    myGame.playersGuessSubmission(parseInt(inputNumber.value));
+  });
+
+  let resetButton = document.getElementById("reset");
+  resetButton.addEventListener("click", function () {
+    location.reload();
+  });
+
+  let hintButton = document.querySelector("#hint");
+  hintButton.addEventListener("click", function () {
+    let myhint = myGame.provideHint();
+    document.querySelector(
+      "#title"
+    ).innerHTML = `Your number may be ${myhint[0]},${myhint[1]} or ${myhint[2]}.`;
+  });
+}
+
+playGame();
