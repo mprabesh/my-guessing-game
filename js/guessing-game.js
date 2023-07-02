@@ -39,13 +39,13 @@ Game.prototype.checkGuess = function () {
       "Guess a number between 1-100";
   } else {
     this.pastGuesses.push(this.playersGuess);
+    document.getElementsByClassName("guess")[
+      `${this.pastGuesses.length}` - 1
+    ].innerHTML = this.playersGuess;
     if (this.pastGuesses.length === 5) {
       gameResult = "You Lose.";
       document.querySelector("#subtitle").innerHTML = "Please! reset the game";
     } else {
-      document.getElementsByClassName("guess")[
-        `${this.pastGuesses.length}` - 1
-      ].innerHTML = this.playersGuess;
       let guessLevel = this.isLower() ? "Guess Higher" : "Guess Lower";
       document.querySelector("#subtitle").innerHTML = guessLevel;
       document.querySelector("#players-input").value = "";
